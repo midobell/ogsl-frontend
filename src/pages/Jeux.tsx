@@ -23,13 +23,7 @@ export default function Jeux() {
 
   return (
     <div className="max-w-5xl mx-auto mt-10 px-4">
-      {/* Bouton PDF */}
-      <button
-        onClick={() => exportPDF("pdf-liste-jeux", "liste_des_jeux")}
-        className="mb-6 bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
-      >
-        Exporter en PDF
-      </button>
+      
 
       <div id="pdf-liste-jeux">
         <h1 className="text-2xl font-bold mb-4">Liste des Jeux</h1>
