@@ -6,7 +6,7 @@ interface LoginPayload {
 }
 
 export async function loginApi({ username, password }: LoginPayload) {
-  const res = await axios.post("http://localhost:8000/api/token/", {
+  const res = await axios.post(${import.meta.env.VITE_API_BASE_URL}/api/token/`, {
     username,
     password,
   });
