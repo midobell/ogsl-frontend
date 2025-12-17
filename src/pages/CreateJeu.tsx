@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { createJeu } from "../store/jeuxSlice";
 import { AppDispatch } from "../store/store";
 
-// ---- Interface du formulaire ----
 interface CreateJeuInput {
   source_id: string;
   identifiant_permanent: string;
