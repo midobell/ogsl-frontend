@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 
+import { Input } from "../components/ui/input";
+import { Button } from "../components/ui/button";
+import { Card, CardContent } from "../components/ui/card";
+
 interface JeuxFiltersProps {
   onFilter: (filters: Record<string, any>) => void;
 }
@@ -26,17 +30,53 @@ export default function JeuxFilters({ onFilter }: JeuxFiltersProps) {
   };
 
   return (
-    <div style={{ marginBottom: 20 }}>
+    <Card className="mb-6">
+      <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-6">
 
-      <input placeholder="Recherche…" value={search} onChange={(e) => setSearch(e.target.value)} />
-      <input placeholder="Source…" value={source} onChange={(e) => setSource(e.target.value)} />
-      <input placeholder="Auteur…" value={auteur} onChange={(e) => setAuteur(e.target.value)} />
-      <input placeholder="Sujet / Thématique…" value={sujet} onChange={(e) => setSujet(e.target.value)} />
+        <Input
+          placeholder="Recherche…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
 
-      <input type="date" value={dateMin} onChange={(e) => setDateMin(e.target.value)} />
-      <input type="date" value={dateMax} onChange={(e) => setDateMax(e.target.value)} />
+        <Input
+          placeholder="Source…"
+          value={source}
+          onChange={(e) => setSource(e.target.value)}
+        />
 
-      <button onClick={handleApply}>Filtrer</button>
-    </div>
+        <Input
+          placeholder="Auteur…"
+          value={auteur}
+          onChange={(e) => setAuteur(e.target.value)}
+        />
+
+        <Input
+          placeholder="Sujet / Thématique…"
+          value={sujet}
+          onChange={(e) => setSujet(e.target.value)}
+        />
+
+        <Input
+          type="date"
+          value={dateMin}
+          onChange={(e) => setDateMin(e.target.value)}
+        />
+
+        <Input
+          type="date"
+          value={dateMax}
+          onChange={(e) => setDateMax(e.target.value)}
+        />
+
+        <Button
+          onClick={handleApply}
+          className="md:col-span-3"
+        >
+          Filtrer
+        </Button>
+
+      </CardContent>
+    </Card>
   );
 }
