@@ -7,6 +7,21 @@ import {
   updatePassword,
 } from "../store/userSlice";
 
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "../components/ui/card";
+import { Input } from "../components/ui/input";
+import { Button } from "../components/ui/button";
+import { Skeleton } from "../components/ui/skeleton";
+import {
+  Alert,
+  AlertTitle,
+  AlertDescription,
+} from "../components/ui/alert";
+
 export default function Profil() {
   const dispatch = useDispatch<AppDispatch>();
   const { profile, loading, error } = useSelector(
@@ -17,127 +32,130 @@ export default function Profil() {
   const [oldPwd, setOldPwd] = useState("");
   const [newPwd, setNewPwd] = useState("");
 
-  /** Charger le profil au montage */
   useEffect(() => {
     dispatch(fetchUserProfile());
   }, [dispatch]);
 
-  /** Préremplir l’email */
   useEffect(() => {
     if (profile?.email) {
       setEmail(profile.email);
     }
   }, [profile]);
 
+  /* Chargement */
   if (loading) {
     return (
-      <div className="text-center text-gray-600 mt-10 text-xl">
-        Chargement…
+      <div className="max-w-2xl mx-auto mt-10 px-4 space-y-4">
+        <Skeleton className="h-10 w-1/2" />
+        <Skeleton className="h-32 w-full" />
+        <Skeleton className="h-32 w-full" />
       </div>
     );
   }
 
+  /* Erreur */
   if (error) {
     return (
-      <div className="text-center text-red-600 mt-10 text-lg">
-        Erreur : {error}
+      <div className="max-w-2xl mx-auto mt-10 px-4">
+        <Alert variant="destructive">
+          <AlertTitle>Erreur</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       </div>
     );
   }
 
-  if (!profile) {
-    return (
-      <div className="text-center text-red-600 mt-10 text-lg">
-        Impossible de charger le profil.
-      </div>
-    );
-  }
+  if (!profile) return null;
 
-  // === Affichage principal ===
   return (
-    <div className="max-w-2xl mx-auto bg-white shadow-md rounded-lg p-6">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">
+    <div className="max-w-2xl mx-auto mt-10 px-4 space-y-6">
+
+      <h1 className="text-3xl font-bold">
         Mon Profil
       </h1>
 
-      {/* Infos utilisateur */}
-      <section className="mb-8">
-        <h2 className="text-xl font-semibold mb-3 text-gray-700">
-          Informations personnelles
-        </h2>
-
-        <div className="space-y-2 text-gray-800">
+      {/* Informations personnelles */}
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            Informations personnelles
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2 text-muted-foreground">
           <p>
-            <span className="font-semibold">Nom d'utilisateur :</span>{" "}
+            <span className="font-medium text-foreground">
+              Nom d'utilisateur :
+            </span>{" "}
             {profile.username}
           </p>
           <p>
-            <span className="font-semibold">Email :</span>{" "}
+            <span className="font-medium text-foreground">
+              Email :
+            </span>{" "}
             {profile.email}
           </p>
-        </div>
-      </section>
+        </CardContent>
+      </Card>
 
-      <hr className="my-6" />
+      {/* Modifier email */}
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            Modifier l’email
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-      {/* Modifier l'email */}
-      <section className="mb-8">
-        <h2 className="text-xl font-semibold mb-3 text-gray-700">
-          Modifier l’email
-        </h2>
-
-        <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full border p-2 rounded mb-3"
-        />
-
-        <button
-          onClick={() => dispatch(updateEmail({ email }))}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-        >
-          Mettre à jour l'email
-        </button>
-      </section>
-
-      <hr className="my-6" />
+          <Button
+            onClick={() => dispatch(updateEmail({ email }))}
+          >
+            Mettre à jour l'email
+          </Button>
+        </CardContent>
+      </Card>
 
       {/* Modifier mot de passe */}
-      <section>
-        <h2 className="text-xl font-semibold mb-3 text-gray-700">
-          Changer le mot de passe
-        </h2>
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            Changer le mot de passe
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Input
+            type="password"
+            placeholder="Ancien mot de passe"
+            value={oldPwd}
+            onChange={(e) => setOldPwd(e.target.value)}
+          />
 
-        <input
-          type="password"
-          placeholder="Ancien mot de passe"
-          value={oldPwd}
-          onChange={(e) => setOldPwd(e.target.value)}
-          className="w-full border p-2 rounded mb-3"
-        />
+          <Input
+            type="password"
+            placeholder="Nouveau mot de passe"
+            value={newPwd}
+            onChange={(e) => setNewPwd(e.target.value)}
+          />
 
-        <input
-          type="password"
-          placeholder="Nouveau mot de passe"
-          value={newPwd}
-          onChange={(e) => setNewPwd(e.target.value)}
-          className="w-full border p-2 rounded mb-3"
-        />
+          <Button
+            variant="secondary"
+            onClick={() =>
+              dispatch(
+                updatePassword({
+                  old_password: oldPwd,
+                  new_password: newPwd,
+                })
+              )
+            }
+          >
+            Changer le mot de passe
+          </Button>
+        </CardContent>
+      </Card>
 
-        <button
-          onClick={() =>
-            dispatch(
-              updatePassword({
-                old_password: oldPwd,
-                new_password: newPwd,
-              })
-            )
-          }
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-        >
-          Changer le mot de passe
-        </button>
-      </section>
     </div>
   );
 }
