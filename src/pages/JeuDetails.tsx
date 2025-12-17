@@ -5,10 +5,29 @@ import { fetchJeuDetails } from "../store/jeuDetailsSlice";
 import { RootState, AppDispatch } from "../store/store";
 
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
 } from "recharts";
 
 import { exportPDF } from "../utils/exportPdf";
+
+import { Button } from "../components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "../components/ui/card";
+import { Skeleton } from "../components/ui/skeleton";
+import {
+  Alert,
+  AlertTitle,
+  AlertDescription,
+} from "../components/ui/alert";
 
 export default function JeuDetails() {
   const { id } = useParams();
@@ -23,8 +42,29 @@ export default function JeuDetails() {
     }
   }, [dispatch, id]);
 
-  if (loading) return <p>Chargement…</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  /* Chargement */
+  if (loading) {
+    return (
+      <div className="max-w-4xl mx-auto mt-10 px-4 space-y-4">
+        <Skeleton className="h-10 w-2/3" />
+        <Skeleton className="h-24 w-full" />
+        <Skeleton className="h-64 w-full" />
+      </div>
+    );
+  }
+
+  /* Erreur */
+  if (error) {
+    return (
+      <div className="max-w-4xl mx-auto mt-10 px-4">
+        <Alert variant="destructive">
+          <AlertTitle>Erreur</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
   if (!item) return null;
 
   const chartData = item.fichiers.map((f) => ({
@@ -33,49 +73,86 @@ export default function JeuDetails() {
   }));
 
   return (
-    <div style={{ maxWidth: 900, margin: "40px auto" }}>
-      
-      {/* --- BOUTON EXPORT PDF --- */}
-      <button
+    <div className="max-w-4xl mx-auto mt-10 px-4 space-y-6">
+
+      <Button
         onClick={() => exportPDF("pdf-jeu-details", `jeu_${item.id}`)}
-        style={{
-          marginBottom: 20,
-          padding: "6px 12px",
-          cursor: "pointer"
-        }}
+        className="mb-2"
       >
         Exporter en PDF
-      </button>
+      </Button>
 
-      {/* --- CONTENU À EXPORTER --- */}
-      <div id="pdf-jeu-details">
-        <h1>{item.titre}</h1>
+      <div id="pdf-jeu-details" className="space-y-6">
 
-        <p><strong>Description :</strong> {item.description}</p>
-        <p><strong>Auteurs :</strong> {item.auteurs}</p>
-        <p><strong>DOI :</strong> {item.identifiant_permanent}</p>
+        {/* Infos générales */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl">
+              {item.titre}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 text-muted-foreground">
+            <p>
+              <span className="font-medium text-foreground">
+                Description :
+              </span>{" "}
+              {item.description}
+            </p>
+            <p>
+              <span className="font-medium text-foreground">
+                Auteurs :
+              </span>{" "}
+              {item.auteurs}
+            </p>
+            <p>
+              <span className="font-medium text-foreground">
+                DOI :
+              </span>{" "}
+              {item.identifiant_permanent}
+            </p>
+          </CardContent>
+        </Card>
 
-        <h2>Fichiers associés</h2>
-        <ul>
-          {item.fichiers.map((f) => (
-            <li key={f.id}>
-              {f.libelle} — {f.type_contenu} — {f.taille} octets
-            </li>
-          ))}
-        </ul>
+        {/* Fichiers associés */}
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              Fichiers associés
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              {item.fichiers.map((f) => (
+                <li key={f.id}>
+                  <span className="font-medium text-foreground">
+                    {f.libelle}
+                  </span>{" "}
+                  — {f.type_contenu} — {f.taille} octets
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
 
-        <h2>Graphique : tailles des fichiers</h2>
+        {/* Graphique */}
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              Graphique : tailles des fichiers
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="h-[320px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData}>
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="taille" fill="#0ea5e9" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
 
-        <div style={{ width: "100%", height: 300 }}>
-          <ResponsiveContainer>
-            <BarChart data={chartData}>
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="taille" fill="#00aaff" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
       </div>
     </div>
   );
