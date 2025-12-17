@@ -17,13 +17,7 @@ export default function Sources() {
 
   return (
     <div className="max-w-4xl mx-auto mt-10 px-4">
-      {/* Bouton PDF */}
-                  <button
-                    onClick={() => exportPDF("pdf-liste-jeux", "liste_des_jeux")}
-                    className="mb-6 bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
-                  >
-                    Exporter en PDF
-                  </button>
+    
       <h1 className="text-2xl font-bold mb-6">Sources</h1>
 
       {loading && <p>Chargement...</p>}
