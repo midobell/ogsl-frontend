@@ -16,43 +16,67 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const res = await dispatch(loginUser({ username, password }));
-
     if (res.meta.requestStatus === "fulfilled") {
       navigate("/dashboard");
     }
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: "60px auto" }}>
-      <h1>Connexion OGSL</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+        
+        <h1 className="text-2xl font-bold text-center mb-6">
+          Connexion OGSL
+        </h1>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Nom d'utilisateur</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Nom d'utilisateur
+            </label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
 
-        <div>
-          <label>Mot de passe</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Mot de passe
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
 
-        <button disabled={loading}>
-          {loading ? "Connexion..." : "Se connecter"}
-        </button>
+          {error && (
+            <p className="text-red-600 text-sm text-center">
+              {error}
+            </p>
+          )}
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
-      </form>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition disabled:opacity-50"
+          >
+            {loading ? "Connexion..." : "Se connecter"}
+          </button>
+        </form>
+
+        <p className="text-xs text-gray-400 text-center mt-6">
+          Open Government Science Lab – OGSL
+        </p>
+      </div>
     </div>
   );
 }
