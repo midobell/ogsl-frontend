@@ -14,7 +14,7 @@ export interface Fichier {
   type_contenu: string;
   taille: number;
   restreint?: boolean;
-  jeu: number;  // ID du jeu associé
+  jeu: number;
 }
 
 export interface Jeu {
