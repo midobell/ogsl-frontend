@@ -39,11 +39,11 @@ export default function Stats() {
     <div style={{ maxWidth: "1100px", margin: "40px auto" }}>
       {/* Bouton PDF */}
                         <button
-                          onClick={() => exportPDF("pdf-liste-jeux", "liste_des_jeux")}
-                          className="mb-6 bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
-                        >
-                          Exporter en PDF
-                        </button>
+  onClick={() => exportPDF("pdf-stats", "statistiques_ogsl")}
+  className="mb-6 bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
+>
+  Exporter en PDF
+</button>
 
       <div id="pdf-stats">
         <h1>Statistiques (GraphQL)</h1>
