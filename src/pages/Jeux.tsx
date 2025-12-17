@@ -43,12 +43,7 @@ export default function Jeux() {
           Liste des Jeux
         </h1>
 
-        <Button
-          variant="outline"
-          onClick={() => exportPDF("pdf-liste-jeux", "liste_des_jeux")}
-        >
-          Exporter en PDF
-        </Button>
+        
       </div>
 
       <JeuxFilters onFilter={handleFilter} />
