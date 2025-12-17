@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../store/authSlice";
 import { RootState, AppDispatch } from "../store/store";
 import { useNavigate } from "react-router-dom";
+import { Button } from "../components/ui/button";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -64,13 +65,14 @@ export default function Login() {
             </p>
           )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition disabled:opacity-50"
-          >
-            {loading ? "Connexion..." : "Se connecter"}
-          </button>
+          <Button
+  type="submit"
+  disabled={loading}
+  className="w-full"
+>
+  {loading ? "Connexion..." : "Se connecter"}
+</Button>
+
         </form>
 
         <p className="text-xs text-gray-400 text-center mt-6">
