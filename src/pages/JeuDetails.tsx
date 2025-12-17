@@ -75,12 +75,7 @@ export default function JeuDetails() {
   return (
     <div className="max-w-4xl mx-auto mt-10 px-4 space-y-6">
 
-      <Button
-        onClick={() => exportPDF("pdf-jeu-details", `jeu_${item.id}`)}
-        className="mb-2"
-      >
-        Exporter en PDF
-      </Button>
+      
 
       <div id="pdf-jeu-details" className="space-y-6">
 
