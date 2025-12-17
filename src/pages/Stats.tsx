@@ -18,16 +18,50 @@ import {
 
 import { exportPDF } from "../utils/exportPdf";
 
+import { Button } from "../components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "../components/ui/card";
+import { Skeleton } from "../components/ui/skeleton";
+import {
+  Alert,
+  AlertTitle,
+  AlertDescription,
+} from "../components/ui/alert";
+
 export default function Stats() {
   const { loading, error, data } = useStatsGraphQL();
 
-  if (loading) return <p>Chargement…</p>;
-  if (error) return <p style={{ color: "red" }}>{error.message}</p>;
+  /* Chargement */
+  if (loading) {
+    return (
+      <div className="max-w-6xl mx-auto mt-10 px-4 space-y-4">
+        <Skeleton className="h-10 w-1/3" />
+        <Skeleton className="h-24 w-full" />
+        <Skeleton className="h-80 w-full" />
+      </div>
+    );
+  }
+
+  /* Erreur */
+  if (error) {
+    return (
+      <div className="max-w-6xl mx-auto mt-10 px-4">
+        <Alert variant="destructive">
+          <AlertTitle>Erreur</AlertTitle>
+          <AlertDescription>{error.message}</AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
   if (!data) return null;
 
   const stats = data.statsJeux;
 
-  // === Les datasets typés selon StatsJeux ===
   const repMime = stats.repartitionMime;
   const repAnnees = stats.repartitionAnnee;
   const repSource = stats.repartitionSource;
@@ -36,92 +70,141 @@ export default function Stats() {
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
   return (
-    <div style={{ maxWidth: "1100px", margin: "40px auto" }}>
-      {/* Bouton PDF */}
-                        <button
-  onClick={() => exportPDF("pdf-stats", "statistiques_ogsl")}
-  className="mb-6 bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
->
-  Exporter en PDF
-</button>
+    <div className="max-w-6xl mx-auto mt-10 px-4 space-y-6">
 
-      <div id="pdf-stats">
-        <h1>Statistiques (GraphQL)</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">
+          Statistiques (GraphQL)
+        </h1>
 
-        {/* KPI */}
-        <div style={{ display: "flex", gap: "20px", marginBottom: "40px" }}>
-          <div style={{ padding: 20, background: "#f0f0f0", borderRadius: 8 }}>
-            <h3>Total jeux</h3>
-            <p>{stats.totalJeux}</p>
-          </div>
+        <Button
+          variant="outline"
+          onClick={() => exportPDF("pdf-stats", "statistiques")}
+        >
+          Exporter en PDF
+        </Button>
+      </div>
 
-          <div style={{ padding: 20, background: "#f0f0f0", borderRadius: 8 }}>
-            <h3>Total fichiers</h3>
-            <p>{stats.totalFichiers}</p>
-          </div>
+      <div id="pdf-stats" className="space-y-6">
 
-          <div style={{ padding: 20, background: "#f0f0f0", borderRadius: 8 }}>
-            <h3>Taille totale</h3>
-            <p>{(stats.tailleTotaleOctets / 1_000_000).toFixed(2)} Mo</p>
-          </div>
+        {/* Statistiques globales */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Total jeux</CardTitle>
+            </CardHeader>
+            <CardContent className="text-2xl font-semibold">
+              {stats.totalJeux}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Total fichiers</CardTitle>
+            </CardHeader>
+            <CardContent className="text-2xl font-semibold">
+              {stats.totalFichiers}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Taille totale</CardTitle>
+            </CardHeader>
+            <CardContent className="text-2xl font-semibold">
+              {(stats.tailleTotaleOctets / 1_000_000).toFixed(2)} Mo
+            </CardContent>
+          </Card>
+
         </div>
 
-        {/* PIE CHART MIME */}
-        <h2>Répartition MIME</h2>
-        <ResponsiveContainer width="100%" height={350}>
-          <PieChart>
-            <Pie
-              data={repMime}
-              dataKey="n"
-              nameKey="type_contenu"
-              cx="50%"
-              cy="50%"
-              outerRadius={120}
-            >
-              {repMime.map((_: any, i: number) => (
-                <Cell key={i} fill={COLORS[i % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
-          </PieChart>
-        </ResponsiveContainer>
+        {/* Répartition MIME */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Répartition MIME</CardTitle>
+          </CardHeader>
+          <CardContent className="h-[350px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={repMime}
+                  dataKey="n"
+                  nameKey="type_contenu"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={120}
+                >
+                  {repMime.map((_: any, i: number) => (
+                    <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
 
-        {/* ANNÉES */}
-        <h2>Jeux par année</h2>
-        <ResponsiveContainer width="100%" height={350}>
-          <BarChart data={repAnnees}>
-            <XAxis dataKey="annee" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="n" fill="#8884d8" />
-          </BarChart>
-        </ResponsiveContainer>
+        {/* Jeux par année */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Jeux par année</CardTitle>
+          </CardHeader>
+          <CardContent className="h-[350px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={repAnnees}>
+                <XAxis dataKey="annee" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="n" fill="#8884d8" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
 
-        {/* SOURCES */}
-        <h2>Répartition des jeux par source</h2>
-        <ResponsiveContainer width="100%" height={350}>
-          <BarChart data={repSource}>
-            <XAxis dataKey="source_nom" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="n" fill="#ff7722" />
-          </BarChart>
-        </ResponsiveContainer>
+        {/* Répartition par source */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Répartition des jeux par source</CardTitle>
+          </CardHeader>
+          <CardContent className="h-[350px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={repSource}>
+                <XAxis dataKey="source_nom" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="n" fill="#ff7722" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
 
-        {/* EVOLUTION */}
-        <h2>Évolution de la taille cumulée par année</h2>
-        <ResponsiveContainer width="100%" height={350}>
-          <LineChart data={evolution}>
-            <XAxis dataKey="annee" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="taille" stroke="#0099ff" strokeWidth={3} />
-          </LineChart>
-        </ResponsiveContainer>
+        {/* Évolution */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Évolution de la taille cumulée par année</CardTitle>
+          </CardHeader>
+          <CardContent className="h-[350px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={evolution}>
+                <XAxis dataKey="annee" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="taille"
+                  stroke="#0ea5e9"
+                  strokeWidth={3}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
       </div>
     </div>
   );
