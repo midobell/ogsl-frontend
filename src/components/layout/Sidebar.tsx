@@ -1,7 +1,8 @@
+// src/components/layout/Sidebar.tsx
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Home, Database, FileText, BarChart2, User } from "lucide-react";
-import { Button } from "../../components/ui/button";
+import { Button } from "../ui/button";
 
 export default function Sidebar() {
   const location = useLocation();
@@ -16,16 +17,18 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 bg-white border-r min-h-screen p-4">
+    <aside className="w-64 bg-white border-r min-h-screen p-4 flex flex-col">
+      <div className="mb-6 px-2">
+        <h2 className="text-xl font-bold">OGSL</h2>
+        <p className="text-xs text-muted-foreground">
+          Open Government Science Lab
+        </p>
+      </div>
 
-      <h2 className="text-xl font-bold mb-6 px-2">
-        OGSL
-      </h2>
-
-      <nav className="space-y-1">
+      <nav className="space-y-1 flex-1">
         {menuItems.map((item) => {
           const Icon = item.icon;
-          const isActive = location.pathname === item.href;
+          const isActive = location.pathname.startsWith(item.href);
 
           return (
             <Button
@@ -45,6 +48,9 @@ export default function Sidebar() {
         })}
       </nav>
 
+      <div className="pt-4 text-xs text-muted-foreground px-2">
+        © OGSL
+      </div>
     </aside>
   );
 }
