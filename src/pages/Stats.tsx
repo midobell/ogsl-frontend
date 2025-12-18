@@ -15,6 +15,11 @@ import {
   LineChart,
   Line,
 } from "recharts";
+import {
+  AreaChart,
+  Area,
+  CartesianGrid,
+} from "recharts";
 
 import { exportPDF } from "../utils/exportPdf";
 
@@ -204,6 +209,76 @@ export default function Stats() {
             </ResponsiveContainer>
           </CardContent>
         </Card>
+
+        <Card>
+  <CardHeader>
+    <CardTitle>Évolution du nombre de jeux par année</CardTitle>
+  </CardHeader>
+  <CardContent className="h-[350px]">
+    <ResponsiveContainer width="100%" height="100%">
+      <LineChart data={repAnnees}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="annee" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Line
+          type="monotone"
+          dataKey="n"
+          stroke="#22c55e"
+          strokeWidth={3}
+        />
+      </LineChart>
+    </ResponsiveContainer>
+  </CardContent>
+</Card>
+
+        <Card>
+  <CardHeader>
+    <CardTitle>Évolution cumulée de la taille (aire)</CardTitle>
+  </CardHeader>
+  <CardContent className="h-[350px]">
+    <ResponsiveContainer width="100%" height="100%">
+      <AreaChart data={evolution}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="annee" />
+        <YAxis />
+        <Tooltip />
+        <Area
+          type="monotone"
+          dataKey="taille"
+          stroke="#0ea5e9"
+          fill="#0ea5e9"
+          fillOpacity={0.3}
+        />
+      </AreaChart>
+    </ResponsiveContainer>
+  </CardContent>
+</Card>
+
+        <Card>
+  <CardHeader>
+    <CardTitle>Répartition des jeux par source (camembert)</CardTitle>
+  </CardHeader>
+  <CardContent className="h-[350px]">
+    <ResponsiveContainer width="100%" height="100%">
+      <PieChart>
+        <Pie
+          data={repSource}
+          dataKey="n"
+          nameKey="source_nom"
+          outerRadius={120}
+        >
+          {repSource.map((_: any, i: number) => (
+            <Cell key={i} fill={COLORS[i % COLORS.length]} />
+          ))}
+        </Pie>
+        <Tooltip />
+        <Legend />
+      </PieChart>
+    </ResponsiveContainer>
+  </CardContent>
+</Card>
 
       </div>
     </div>
