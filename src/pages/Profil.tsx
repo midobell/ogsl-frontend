@@ -1,3 +1,4 @@
+// src/pages/Profil.tsx
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../store/store";
@@ -42,18 +43,16 @@ export default function Profil() {
     }
   }, [profile]);
 
-  /* Chargement */
   if (loading) {
     return (
       <div className="max-w-2xl mx-auto mt-10 px-4 space-y-4">
-        <Skeleton className="h-10 w-1/2" />
-        <Skeleton className="h-32 w-full" />
-        <Skeleton className="h-32 w-full" />
+        <Skeleton className="h-8 w-1/3" />
+        <Skeleton className="h-28 w-full" />
+        <Skeleton className="h-28 w-full" />
       </div>
     );
   }
 
-  /* Erreur */
   if (error) {
     return (
       <div className="max-w-2xl mx-auto mt-10 px-4">
@@ -71,77 +70,71 @@ export default function Profil() {
     <div className="max-w-2xl mx-auto mt-10 px-4 space-y-6">
 
       <h1 className="text-3xl font-bold">
-        Mon Profil
+        Mon profil
       </h1>
 
-      {/* Informations personnelles */}
       <Card>
         <CardHeader>
           <CardTitle>
             Informations personnelles
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2 text-muted-foreground">
+        <CardContent className="space-y-2 text-sm">
           <p>
-            <span className="font-medium text-foreground">
-              Nom d'utilisateur :
+            <span className="text-muted-foreground">
+              Nom d’utilisateur :
             </span>{" "}
             {profile.username}
           </p>
           <p>
-            <span className="font-medium text-foreground">
-              Email :
+            <span className="text-muted-foreground">
+              Adresse email :
             </span>{" "}
             {profile.email}
           </p>
         </CardContent>
       </Card>
 
-      {/* Modifier email */}
       <Card>
         <CardHeader>
           <CardTitle>
-            Modifier l’email
+            Modifier l’adresse email
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-3">
           <Input
+            type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-
-          <Button
-            onClick={() => dispatch(updateEmail({ email }))}
-          >
-            Mettre à jour l'email
+          <Button className="w-full" onClick={() => dispatch(updateEmail({ email }))}>
+            Mettre à jour l’email
           </Button>
         </CardContent>
       </Card>
 
-      {/* Modifier mot de passe */}
       <Card>
         <CardHeader>
           <CardTitle>
-            Changer le mot de passe
+            Sécurité du compte
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-3">
           <Input
             type="password"
             placeholder="Ancien mot de passe"
             value={oldPwd}
             onChange={(e) => setOldPwd(e.target.value)}
           />
-
           <Input
             type="password"
             placeholder="Nouveau mot de passe"
             value={newPwd}
             onChange={(e) => setNewPwd(e.target.value)}
           />
-
           <Button
             variant="secondary"
+            className="w-full"
             onClick={() =>
               dispatch(
                 updatePassword({
