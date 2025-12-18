@@ -1,9 +1,10 @@
+// src/components/layout/Navbar.tsx
 import React from "react";
 import { useDispatch } from "react-redux";
 import { logout } from "../../store/authSlice";
 import { useNavigate } from "react-router-dom";
-import { Menu, LogOut } from "lucide-react";
-import { Button } from "../../components/ui/button";
+import { LogOut } from "lucide-react";
+import { Button } from "../ui/button";
 
 export default function Navbar() {
   const dispatch = useDispatch();
@@ -15,25 +16,20 @@ export default function Navbar() {
   };
 
   return (
-    <header className="bg-white border-b flex items-center justify-between px-6 py-3">
-
-      <div className="flex items-center gap-3">
-        <Menu size={22} className="text-muted-foreground" />
-        <h1 className="text-lg font-semibold">
-          Interface Client OGSL
-        </h1>
-      </div>
+    <header className="bg-white border-b px-6 py-3 flex items-center justify-between">
+      <h1 className="text-lg font-semibold">
+        Interface Client OGSL
+      </h1>
 
       <Button
         variant="destructive"
+        size="sm"
         onClick={handleLogout}
         className="flex items-center gap-2"
-        aria-label="Se déconnecter"
       >
         <LogOut size={16} />
         Déconnexion
       </Button>
-
     </header>
   );
 }
